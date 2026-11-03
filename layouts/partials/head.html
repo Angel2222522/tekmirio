@@ -6,12 +6,14 @@
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $desc }}">
 <link rel="canonical" href="{{ .Permalink }}">
+{{- if and .IsPage .Params.topic_ai }}<meta name="tk-topic" content="ai">{{ end }}
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
 {{- if or .Draft (eq .Kind "404") }}<meta name="robots" content="noindex">{{ end }}
 <meta property="og:site_name" content="{{ site.Title }}">
-<meta property="og:locale" content="el_GR">
+<meta property="og:locale" content="{{ if eq .Params.lang "en" }}en_GB{{ else }}el_GR{{ end }}">
+{{- with partial "translation.html" . }}<link rel="alternate" hreflang="{{ if eq $.Params.lang "en" }}en{{ else }}el{{ end }}" href="{{ $.Permalink }}"><link rel="alternate" hreflang="{{ if eq .Params.lang "en" }}en{{ else }}el{{ end }}" href="{{ .Permalink }}"><meta property="og:locale:alternate" content="{{ if eq .Params.lang "en" }}en_GB{{ else }}el_GR{{ end }}">{{ end }}
 <meta property="og:title" content="{{ .Title }}">
 <meta property="og:description" content="{{ $desc }}">
 <meta property="og:url" content="{{ .Permalink }}">

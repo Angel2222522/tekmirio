@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="el">
+<html lang="{{ if eq .Params.lang "en" }}en{{ else }}el{{ end }}">
 <head>{{ partial "head.html" . }}</head>
 <body class="{{ .Kind }}{{ with .Section }} s-{{ . }}{{ end }}">
-<a class="skip" href="#main">Μετάβαση στο περιεχόμενο</a>
+<a class="skip" href="#main">{{ if eq .Params.lang "en" }}Skip to content{{ else }}Μετάβαση στο περιεχόμενο{{ end }}</a>
 {{ partial "header.html" . }}
 <main id="main" tabindex="-1">{{ block "main" . }}{{ end }}</main>
 {{ partial "footer.html" . }}

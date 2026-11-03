@@ -1,0 +1,8 @@
+{{- /* Μετάφραση άρθρου: front matter `translation: <slug του άλλου άρθρου>` (στον ίδιο φάκελο έτους).
+     Το αγγλικό άρθρο έχει `lang: en` και `build: {list: never}`, ώστε να μη μπαίνει σε λίστες/αρχική/RSS. Επιστρέφει σελίδα ή false. */ -}}
+{{- $r := false -}}
+{{- with .Params.translation -}}
+{{- $dir := path.Dir $.File.Path -}}
+{{- with site.GetPage (printf "/%s/%s" $dir .) }}{{ if eq .Section "articles" }}{{ $r = . }}{{ end }}{{ end -}}
+{{- end -}}
+{{- return $r -}}

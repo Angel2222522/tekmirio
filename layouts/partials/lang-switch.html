@@ -1,0 +1,5 @@
+{{- /* Κουμπί γλώσσας: εμφανίζεται μόνο αν υπάρχει μετάφραση. */ -}}
+{{- with partial "translation.html" . -}}
+{{- $en := eq .Params.lang "en" -}}
+<p class="lang-switch"><a href="{{ .RelPermalink }}" hreflang="{{ if $en }}en{{ else }}el{{ end }}" lang="{{ if $en }}en{{ else }}el{{ end }}" rel="alternate">{{ if $en }}English{{ else }}Ελληνικά{{ end }}</a></p>
+{{- end -}}

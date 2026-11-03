@@ -1,29 +1,40 @@
 {{ define "main" }}
-{{- if eq .Section "articles" }}{{ $c := partial "cat.html" .Params.category }}
+{{- if eq .Section "articles" }}{{ $c := partial "cat.html" .Params.category }}{{ $en := eq .Params.lang "en" }}
 <article class="article" style="--c:{{ $c.color }}">
   <header class="a-head wrap-narrow">
-    {{ if .Draft }}<p class="draft-flag">ΠΡΟΣΧΕΔΙΟ — δεν δημοσιεύεται</p>{{ end }}
+    {{ if .Draft }}<p class="draft-flag">{{ if $en }}DRAFT — not published{{ else }}ΠΡΟΣΧΕΔΙΟ — δεν δημοσιεύεται{{ end }}</p>{{ end }}
     {{ partial "kicker.html" . }}
     <h1>{{ .Title }}</h1>
     <p class="standfirst">{{ .Params.summary }}</p>
+    {{- if $en }}
+    <div class="byline">
+      <span class="by">{{ site.Params.byline_en | default site.Params.byline }}</span>
+      <span>Published: <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "date-en.html" .Date }}</time></span>
+      {{ if gt .Lastmod.Unix .Date.Unix }}<span>Updated: <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "date-en.html" .Lastmod }}</time></span>{{ end }}
+      <span>{{ .ReadingTime }} min read</span>
+    </div>
+    {{- else }}
     <div class="byline">
       <span class="by">{{ site.Params.byline }}</span>
       <span>Δημοσίευση: <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "date.html" .Date }}</time></span>
       {{ if gt .Lastmod.Unix .Date.Unix }}<span>Ενημέρωση: <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "date.html" .Lastmod }}</time></span>{{ end }}
       <span>{{ .ReadingTime }} λεπτ{{ if eq .ReadingTime 1 }}ό{{ else }}ά{{ end }} ανάγνωσης</span>
     </div>
+    {{- end }}
+    {{ partial "lang-switch.html" . }}
   </header>
   <div class="a-cover wrap-wide">{{ partial "cover.html" (dict "page" . "size" "xl") }}</div>
   <div class="a-body wrap-narrow">
     <div class="prose">{{ .Content }}</div>
     {{ partial "share.html" . }}
-    <aside class="disclosure" aria-label="Διορθώσεις"><p>Εντοπίσατε λάθος; <a href="{{ site.Params.correctionsURL }}{{ .Title | urlquery }}">Υποβάλετε διόρθωση</a>.</p></aside>
-    {{ with .Params.tags }}<p class="tags"><span class="vh">Ετικέτες:</span>{{ range . }}<a href="{{ (printf "tags/%s/" (. | urlize)) | relURL }}">{{ . }}</a>{{ end }}</p>{{ end }}
+    {{ if $en }}<aside class="disclosure" aria-label="Corrections" lang="en"><p>Spotted an error? <a href="{{ site.Params.correctionsURL }}{{ .Title | urlquery }}">Submit a correction</a>.</p></aside>
+    {{ else }}<aside class="disclosure" aria-label="Διορθώσεις"><p>Εντοπίσατε λάθος; <a href="{{ site.Params.correctionsURL }}{{ .Title | urlquery }}">Υποβάλετε διόρθωση</a>.</p></aside>{{ end }}
+    {{ with (cond $en nil .Params.tags) }}<p class="tags"><span class="vh">Ετικέτες:</span>{{ range . }}<a href="{{ (printf "tags/%s/" (. | urlize)) | relURL }}">{{ . }}</a>{{ end }}</p>{{ end }}
   </div>
 </article>
 {{- $rel := where (where (where site.RegularPages "Section" "articles") "Params.category" .Params.category) "Permalink" "ne" .Permalink -}}
 {{- if lt (len $rel) 3 }}{{ $rel = $rel | append (where (where site.RegularPages "Section" "articles") "Permalink" "ne" .Permalink) | uniq }}{{ end -}}
-{{ with first 4 $rel }}<section class="wrap related" aria-labelledby="rel-h"><h2 id="rel-h" class="sec-h"><span>Διαβάστε επίσης</span></h2><div class="grid g4">{{ range $i, $p := . }}{{ partial "card.html" (dict "page" $p "style" (cond (lt $i 2) "std" "text")) }}{{ end }}</div></section>{{ end }}
+{{ with (cond (eq .Params.lang "en") nil (first 4 $rel)) }}<section class="wrap related" aria-labelledby="rel-h"><h2 id="rel-h" class="sec-h"><span>Διαβάστε επίσης</span></h2><div class="grid g4">{{ range $i, $p := . }}{{ partial "card.html" (dict "page" $p "style" (cond (lt $i 2) "std" "text")) }}{{ end }}</div></section>{{ end }}
 {{- else }}
 <article class="article page">
   <header class="a-head wrap-narrow"><p class="kicker"><span class="k-cat">Τεκμήριο</span></p><h1>{{ .Title }}</h1></header>

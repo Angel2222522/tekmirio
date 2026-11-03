@@ -1,6 +1,20 @@
 {
  "articles": [
   {
+   "slug": "anthropic-acceleration-threshold",
+   "title": "Anthropic warns its next models may soon cross the line where AI dramatically speeds up its own development",
+   "date": "2026-11-03T18:00:00+02:00",
+   "category": "diethni",
+   "file": "content/articles/2026/anthropic-acceleration-threshold.md"
+  },
+  {
+   "slug": "anthropic-orio-epitachynsis",
+   "title": "Η Anthropic προειδοποιεί: τα επόμενα μοντέλα της ίσως φτάσουν σύντομα το όριο όπου η τεχνητή νοημοσύνη επιταχύνει την ίδια της την εξέλιξη",
+   "date": "2026-11-03T18:00:00+02:00",
+   "category": "diethni",
+   "file": "content/articles/2026/anthropic-orio-epitachynsis.md"
+  },
+  {
    "slug": "karystianou-ekloges-elpida",
    "title": "Καρυστιανού: «Κατεβαίνουμε με αξιώσεις» – Όχι σε Σαμαρά και σε «εν ενεργεία πολιτικούς»",
    "date": "2026-11-03T17:46:00+02:00",

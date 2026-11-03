@@ -1,4 +1,4 @@
-- {key: eidisi, name: "Είδηση"}
-- {key: analysi, name: "Ανάλυση"}
-- {key: epexigimatiko, name: "Επεξηγηματικό"}
-- {key: apopsi, name: "Άποψη"}
+- {key: eidisi, name_en: "News", name: "Είδηση"}
+- {key: analysi, name_en: "Analysis", name: "Ανάλυση"}
+- {key: epexigimatiko, name_en: "Explainer", name: "Επεξηγηματικό"}
+- {key: apopsi, name_en: "Opinion", name: "Άποψη"}

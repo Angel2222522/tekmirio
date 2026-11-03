@@ -13,6 +13,7 @@ CATS = {c["key"] for c in yaml.safe_load(open("data/categories.yaml", encoding="
 TYPES = {t["key"] for t in yaml.safe_load(open("data/types.yaml", encoding="utf-8"))}
 REQ = ["title", "slug", "date", "lastmod", "category", "article_type", "summary", "risk", "status", "draft"]
 errors, warns, slugs, titles = [], [], {}, {}
+trans = {}  # slug -> (αρχείο, translation, lang)
 
 def norm(t):
     t = unicodedata.normalize("NFD", str(t).lower())
@@ -73,10 +74,35 @@ for f in files:
     if "sources" in fm: E("το πεδίο 'sources' δεν επιτρέπεται (το αποθετήριο είναι δημόσιο· οι πηγές μένουν στο ιδιωτικό αρχείο)")
     if need_priv and (need_priv == "all-published" and st == "published" or slug in need_priv.split(",")): check_private(f, slug)
     if st == "published" and len(body) < 600: E("πολύ σύντομο κείμενο (<600 χαρακτήρες)")
+    lang = fm.get("lang", "el")
+    if lang not in ("el", "en"): E("lang πρέπει el|en")
+    tr = fm.get("translation")
+    if tr is not None and not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", str(tr)): E("translation: πρέπει να είναι slug άλλου άρθρου")
+    if tr is not None and str(tr) == slug: E("translation δείχνει στο ίδιο άρθρο")
+    if lang == "en":
+        if not tr: E("αγγλικό άρθρο χωρίς 'translation' (πρέπει να συνδέεται με το ελληνικό)")
+        if (fm.get("build") or {}).get("list") != "never": E("αγγλικό άρθρο: χρειάζεται 'build: {list: never}' ώστε να μη μπαίνει σε αρχική/λίστες/RSS")
+    if "topic_ai" in fm and not isinstance(fm["topic_ai"], bool): E("topic_ai πρέπει true|false")
+    trans[slug] = (f, str(tr) if tr else None, lang, st)
     if fm.get("image") and (not fm.get("image_alt") or not fm.get("image_credit")):
         E("εικόνα χωρίς image_alt ή image_credit (απαιτείται περιγραφή και πίστωση/άδεια)")
     if len(str(fm.get("summary", ""))) > 300: E("summary > 300 χαρακτήρες")
     if re.search(r"(ghp_|github_pat_)[A-Za-z0-9_]{20,}", raw): E("ΠΙΘΑΝΟ ΜΥΣΤΙΚΟ ΣΤΟ ΚΕΙΜΕΝΟ")
+
+# Ζεύγη μεταφράσεων: ο σύνδεσμος πρέπει να είναι αμοιβαίος, σε διαφορετική γλώσσα, με το ελληνικό ως βάση.
+def find_slug(sl):
+    for g in glob.glob("content/articles/**/*.md", recursive=True) + glob.glob(f"{PRIV}/drafts/*.md"):
+        mm = re.match(r"^---\n(.*?)\n---\n", open(g, encoding="utf-8").read(), re.S)
+        try: y = yaml.safe_load(mm.group(1)) if mm else {}
+        except Exception: continue
+        if str((y or {}).get("slug")) == sl: return (g, str(y.get("translation")) if y.get("translation") else None, y.get("lang", "el"), y.get("status"))
+for sl, (f, tr, lang, st) in trans.items():
+    if not tr: continue
+    o = trans.get(tr) or find_slug(tr)
+    if not o: errors.append(f"{f}: η μετάφραση '{tr}' δεν βρέθηκε"); continue
+    if o[1] != sl: errors.append(f"{f}: η μετάφραση '{tr}' δεν δείχνει πίσω σε '{sl}'")
+    if o[2] == lang: errors.append(f"{f}: η μετάφραση '{tr}' έχει την ίδια γλώσσα ({lang})")
+    if lang == "en" and st == "published" and o[3] != "published": errors.append(f"{f}: αγγλικό άρθρο δημοσιεύεται χωρίς δημοσιευμένο το ελληνικό '{tr}'")
 
 # Σύγκριση με data/published-index.json (αποφυγή επαναδημοσίευσης)
 try:

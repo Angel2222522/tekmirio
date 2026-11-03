@@ -1,0 +1,2 @@
+{{- $t := time.In "Europe/Athens" . -}}
+{{- return printf "%d %s %d · %s" $t.Day ($t.Format "January") $t.Year ($t.Format "15:04") -}}

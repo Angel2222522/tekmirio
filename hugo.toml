@@ -37,3 +37,4 @@ enableGitInfo = false
   repoURL = "https://github.com/Angel2222522/tekmirio"
   correctionsURL = "https://github.com/Angel2222522/tekmirio/issues/new?labels=correction&title=%CE%94%CE%B9%CF%8C%CF%81%CE%B8%CF%89%CF%83%CE%B7%3A%20"
   byline = "Σύνταξη Τεκμηρίου"
+  byline_en = "Tekmirio newsroom"

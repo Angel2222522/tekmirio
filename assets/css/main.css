@@ -384,3 +384,5 @@ main:focus{outline:none}
 }
 .byline{gap:4px 20px}.byline>span+span::before{content:none}
 @media(max-width:700px){.a-cover .cover-xl{aspect-ratio:16/9}}
+.lang-switch{margin:14px 0 0}.lang-switch a{display:inline-flex;align-items:center;min-height:32px;padding:4px 12px;border:1px solid var(--line2);border-radius:999px;color:var(--ink);font:700 .78rem var(--sans);letter-spacing:.06em;text-decoration:none}.lang-switch a:hover{border-color:var(--ink)}
+@media print{.lang-switch{display:none!important}}

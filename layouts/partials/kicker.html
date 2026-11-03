@@ -1,2 +1,3 @@
-{{- $c := partial "cat.html" .Params.category -}}
-<p class="kicker"><a class="k-cat" href="{{ printf "category/%s/" $c.key | relURL }}" style="--c:{{ $c.color }}">{{ $c.name }}</a><span class="k-type t-{{ .Params.article_type }}">{{ partial "atype.html" .Params.article_type }}</span></p>
+{{- $c := partial "cat.html" .Params.category -}}{{- $en := eq .Params.lang "en" -}}
+{{- $tn := partial "atype.html" .Params.article_type }}{{ if $en }}{{ range hugo.Data.types }}{{ if and (eq .key $.Params.article_type) .name_en }}{{ $tn = .name_en }}{{ end }}{{ end }}{{ end -}}
+<p class="kicker"><a class="k-cat" href="{{ printf "category/%s/" $c.key | relURL }}" style="--c:{{ $c.color }}">{{ if $en }}{{ $c.name_en | default $c.name }}{{ else }}{{ $c.name }}{{ end }}</a><span class="k-type t-{{ .Params.article_type }}">{{ $tn }}</span></p>
