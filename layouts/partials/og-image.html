@@ -1,0 +1,7 @@
+{{- /* Εικόνα κοινοποίησης ανά άρθρο (1200x630): φόντο ενότητας + τίτλος. Επιστρέφει resource. */ -}}
+{{- $base := resources.Get (printf "og/base-%s.png" .Params.category) | default (resources.Get "og/base-default.png") -}}
+{{- $font := resources.Get "fonts/NotoSerif-Bold.ttf" -}}
+{{- $t := .Title -}}{{- $n := strings.RuneCount $t -}}
+{{- $size := 76 }}{{ if gt $n 115 }}{{ $size = 50 }}{{ else if gt $n 90 }}{{ $size = 56 }}{{ else if gt $n 65 }}{{ $size = 64 }}{{ else if gt $n 45 }}{{ $size = 70 }}{{ end -}}
+{{- $img := $base.Filter (images.Text $t (dict "color" "#ffffff" "size" $size "linespacing" (int (mul $size 0.22)) "x" 72 "y" 138 "font" $font)) -}}
+{{- return ($img.Process "png" | resources.Copy (printf "og/%s.png" .Params.slug)) -}}

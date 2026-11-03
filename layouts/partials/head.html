@@ -16,8 +16,13 @@
 <meta property="og:description" content="{{ $desc }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:type" content="{{ if and .IsPage (eq .Section "articles") }}article{{ else }}website{{ end }}">
-<meta property="og:image" content="{{ "og.png" | absURL }}">
-<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+{{- $og := "og.png" | absURL }}{{ $ogAlt := site.Title }}
+{{- if and .IsPage (eq .Section "articles") .Params.slug }}{{ with partial "og-image.html" . }}{{ $og = .Permalink }}{{ end }}{{ $ogAlt = .Title }}{{ end }}
+<meta property="og:image" content="{{ $og }}">
+<meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ $ogAlt }}">
+<meta name="twitter:image" content="{{ $og }}">
+<meta name="twitter:image:alt" content="{{ $ogAlt }}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ .Title }}">
 <meta name="twitter:description" content="{{ $desc }}">
