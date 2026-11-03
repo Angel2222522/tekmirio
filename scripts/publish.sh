@@ -52,7 +52,10 @@ if [ -z "$NEWEST" ]; then URL="$SITE_URL/"; else
   URL="$(python3 - "$NEWEST" <<'PY'
 import sys,re,yaml
 fm=yaml.safe_load(re.match(r"^---\n(.*?)\n---\n",open(sys.argv[1],encoding="utf-8").read(),re.S).group(1))
-d=fm["date"];print(f"https://angel2222522.github.io/tekmirio/{d.year}/{d.month:02d}/{fm['slug']}/")
+import datetime
+d=fm["date"]
+if isinstance(d,str): d=datetime.datetime.fromisoformat(d)
+print(f"https://angel2222522.github.io/tekmirio/{d.year}/{d.month:02d}/{fm['slug']}/")
 PY
 )"; fi
 log "Αναμονή για δημοσίευση στο / waiting for: $URL"

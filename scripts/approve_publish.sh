@@ -25,7 +25,10 @@ now = datetime.datetime.now().astimezone().replace(microsecond=0)
 d = fm.get("date")
 if isinstance(d, str): d = datetime.datetime.fromisoformat(d)
 if not isinstance(d, datetime.datetime) or d.tzinfo is None or d > now: d = now
-fm["date"] = d.isoformat(); fm["lastmod"] = max(now, d).isoformat(); fm["status"] = "published"; fm["draft"] = False
+fm["date"] = d.isoformat(); lm = fm.get("lastmod")
+if isinstance(lm, str): lm = datetime.datetime.fromisoformat(lm)
+if not isinstance(lm, datetime.datetime) or lm.tzinfo is None or lm < d or lm > now: lm = d
+fm["lastmod"] = lm.isoformat(); fm["status"] = "published"; fm["draft"] = False
 dest = f"content/articles/{d.year}/{slug}.md"
 if os.path.exists(dest): sys.exit(f"υπάρχει ήδη: {dest}")
 os.makedirs(os.path.dirname(dest), exist_ok=True)
