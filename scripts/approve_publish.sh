@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # Έγκριση & δημοσίευση προσχεδίου από τον ιδιωτικό φάκελο.
-# Χρήση: scripts/approve_publish.sh <slug>      (DRY_RUN=1 για δοκιμή χωρίς commit/push)
+# Χρήση: scripts/approve_publish.sh <slug> [slug2 ...]   (ένα commit/deploy· DRY_RUN=1 για δοκιμή)
 set -uo pipefail
 cd "$(dirname "$0")/.."
 export TZ=Europe/Athens
 PRIV="${TEKMIRIO_PRIVATE:-/workspace/tekmirio-private}"
-SLUG="${1:?Χρήση: approve_publish.sh <slug>}"
+[ $# -ge 1 ] || { echo "Χρήση: approve_publish.sh <slug> [slug2 ...]"; exit 1; }
+DESTS=(); TITLES=()
+cleanup(){ for d in "${DESTS[@]}"; do git ls-files --error-unmatch "$d" >/dev/null 2>&1 || rm -f "$d"; done; python3 scripts/update_index.py >/dev/null; }
+for SLUG in "$@"; do
 SRC="$PRIV/drafts/$SLUG.md"
-[ -f "$SRC" ] || { echo "Δεν βρέθηκε προσχέδιο: $SRC"; exit 1; }
+[ -f "$SRC" ] || { echo "Δεν βρέθηκε προσχέδιο: $SRC"; cleanup; exit 1; }
 DEST="$(python3 - "$SRC" "$PRIV" <<'PY'
 import sys, re, yaml, datetime, json, os
 src, priv = sys.argv[1], sys.argv[2]
@@ -30,18 +33,20 @@ y = yaml.safe_dump(fm, allow_unicode=True, sort_keys=False, default_flow_style=N
 open(dest, "w", encoding="utf-8").write(f"---\n{y}---\n{m.group(2).lstrip()}")
 print(dest)
 PY
-)" || { echo "Αποτυχία προετοιμασίας: $DEST"; exit 1; }
-echo "Μεταφέρθηκε στο $DEST"
-TITLE="$(python3 -c "import re,yaml,sys;print(yaml.safe_load(re.match(r'^---\n(.*?)\n---\n',open('$DEST',encoding='utf-8').read(),re.S).group(1))['title'])")"
-if PUBLISH_SLUGS="$SLUG" scripts/publish.sh "Δημοσίευση: $TITLE"; then
+)" || { echo "Αποτυχία προετοιμασίας ($SLUG): $DEST"; cleanup; exit 1; }
+echo "Μεταφέρθηκε στο $DEST"; DESTS+=("$DEST")
+TITLES+=("$(python3 -c "import re,yaml;print(yaml.safe_load(re.match(r'^---\n(.*?)\n---\n',open('$DEST',encoding='utf-8').read(),re.S).group(1))['title'])")")
+done
+SLUGS="$(IFS=,; echo "$*")"
+if [ $# -eq 1 ]; then MSG="Δημοσίευση: ${TITLES[0]}"; else MSG="Δημοσίευση $# άρθρων: $SLUGS"; fi
+if PUBLISH_SLUGS="$SLUGS" scripts/publish.sh "$MSG"; then
   mkdir -p "$PRIV/drafts/published"
-  if [ "${DRY_RUN:-}" = 1 ]; then rm -f "$DEST"; python3 scripts/update_index.py >/dev/null; echo "(DRY RUN: το $DEST αφαιρέθηκε)"; else mv "$SRC" "$PRIV/drafts/published/$SLUG.md"; fi
-  echo "OK: $TITLE"
+  if [ "${DRY_RUN:-}" = 1 ]; then cleanup; echo "(DRY RUN: τα αρχεία αφαιρέθηκαν)"
+  else for SLUG in "$@"; do mv "$PRIV/drafts/$SLUG.md" "$PRIV/drafts/published/$SLUG.md"; done; fi
+  printf 'OK: %s\n' "${TITLES[@]}"
 else
-  if git ls-files --error-unmatch "$DEST" >/dev/null 2>&1 && ! git diff --quiet origin/main -- "$DEST" 2>/dev/null; then
-    echo "Η δημοσίευση απέτυχε ΜΕΤΑ το commit· δείτε το log."
-  elif ! git ls-files --error-unmatch "$DEST" >/dev/null 2>&1; then
-    rm -f "$DEST"; python3 scripts/update_index.py >/dev/null; echo "Η δημοσίευση απέτυχε· το προσχέδιο έμεινε στο $SRC (τίποτα δεν δημοσιεύτηκε)."
-  else echo "Το άρθρο έγινε commit/push αλλά δεν επιβεβαιώθηκε ζωντανό· ελέγξτε το GitHub Actions."; fi
+  if [ "$(git log -1 --format=%s)" = "$MSG" ]; then
+    echo "Αποτυχία μετά το commit· ελέγξτε το log και το GitHub Actions."
+  else cleanup; echo "Η δημοσίευση απέτυχε· τα προσχέδια έμειναν στο $PRIV/drafts (τίποτα δεν δημοσιεύτηκε)."; fi
   exit 1
 fi

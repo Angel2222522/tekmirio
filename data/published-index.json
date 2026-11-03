@@ -1,3 +1,39 @@
 {
- "articles": []
+ "articles": [
+  {
+   "slug": "karystianou-ekloges-elpida",
+   "title": "Καρυστιανού: «Κατεβαίνουμε με αξιώσεις» – Όχι σε Σαμαρά και σε «εν ενεργεία πολιτικούς»",
+   "date": "2026-11-03T17:46:00+02:00",
+   "category": "kommata-thesmoi",
+   "file": "content/articles/2026/karystianou-ekloges-elpida.md"
+  },
+  {
+   "slug": "kc390-ellada-portogalia",
+   "title": "Τα πρώτα ιπτάμενα τάνκερ της Πολεμικής Αεροπορίας: υπογράφηκε η συμφωνία για τα KC-390",
+   "date": "2026-11-03T17:45:00+02:00",
+   "category": "diethni",
+   "file": "content/articles/2026/kc390-ellada-portogalia.md"
+  },
+  {
+   "slug": "mitsotakis-synenteuxi-aftodynamia",
+   "title": "Μητσοτάκης: «Η αυτοδυναμία καθίσταται μονόδρομος» – Πόρτα στα δεξιά, αιχμές για Ανδρουλάκη και Σαμαρά",
+   "date": "2026-11-03T17:44:00+02:00",
+   "category": "politiki",
+   "file": "content/articles/2026/mitsotakis-synenteuxi-aftodynamia.md"
+  },
+  {
+   "slug": "tsipras-archiereas-diafthoras",
+   "title": "«Αρχιερέας της διαφθοράς»: Τσίπρας και Μητσοτάκης σε μετωπική σύγκρουση",
+   "date": "2026-11-03T17:43:00+02:00",
+   "category": "politiki",
+   "file": "content/articles/2026/tsipras-archiereas-diafthoras.md"
+  },
+  {
+   "slug": "nomosxedio-agora-reymatos",
+   "title": "Συμβόλαια ρεύματος με σταθερή τιμή για έναν χρόνο: τι φέρνει το νέο νομοσχέδιο για την αγορά ηλεκτρικής ενέργειας",
+   "date": "2026-11-03T17:42:00+02:00",
+   "category": "kyvernisi-vouli",
+   "file": "content/articles/2026/nomosxedio-agora-reymatos.md"
+  }
+ ]
 }

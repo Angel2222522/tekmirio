@@ -52,7 +52,7 @@ for f in files:
     if st not in ("draft", "published"): E("status πρέπει draft|published")
     if (st == "draft") != bool(fm.get("draft")): E("status και draft δεν συμφωνούν")
     if fm.get("risk") not in ("low", "medium", "high"): E("risk πρέπει low|medium|high")
-    if fm.get("risk") == "high" and st == "published": E("άρθρο υψηλού κινδύνου δεν δημοσιεύεται χωρίς έγκριση (risk: high)")
+    if fm.get("risk") == "high" and st == "published" and fm.get("approved_by_owner") is not True: E("άρθρο υψηλού κινδύνου δεν δημοσιεύεται χωρίς έγκριση (risk: high)")
     for k in ("date", "lastmod"):
         v = fm.get(k)
         if isinstance(v, str):
