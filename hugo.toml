@@ -1,0 +1,39 @@
+# Βασική διεύθυνση (στο GitHub Actions ορίζεται με --baseURL):
+baseURL = "https://angel2222522.github.io/tekmirio/"
+locale = "el"
+defaultContentLanguage = "el"
+title = "Τεκμήριο"
+timeZone = "Europe/Athens"
+enableRobotsTXT = true
+summaryLength = 40
+enableGitInfo = false
+
+[taxonomies]
+  category = "category"
+  tag = "tags"
+  article_type = "article_type"
+
+[permalinks]
+  articles = "/:year/:month/:slug/"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML"]
+  term = ["HTML", "RSS"]
+
+[services.rss]
+  limit = 50
+
+[sitemap]
+  changefreq = "daily"
+
+[markup.goldmark.renderer]
+  unsafe = false
+
+[params]
+  tagline = "Πολιτική και επικαιρότητα, με ακρίβεια"
+  description = "Ανεξάρτητο ελληνικό ψηφιακό μέσο για την πολιτική, την οικονομία, την Ευρώπη και τα διεθνή, με διασταυρωμένη ενημέρωση."
+  repoURL = "https://github.com/Angel2222522/tekmirio"
+  correctionsURL = "https://github.com/Angel2222522/tekmirio/issues/new?labels=correction&title=%CE%94%CE%B9%CF%8C%CF%81%CE%B8%CF%89%CF%83%CE%B7%3A%20"
+  byline = "Σύνταξη Τεκμηρίου"

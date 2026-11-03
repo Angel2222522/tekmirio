@@ -1,0 +1,20 @@
+<section class="launch" aria-labelledby="launch-h">
+  <div class="wrap launch-in">
+    <div class="launch-copy">
+      <p class="eyebrow">Νέο ψηφιακό μέσο · {{ (time.In "Europe/Athens" now).Year }}</p>
+      <h1 id="launch-h">Πολιτική και επικαιρότητα, με ακρίβεια και ψυχραιμία.</h1>
+      <p class="launch-dek">Το Τεκμήριο καλύπτει την ελληνική πολιτική, τη Βουλή, την οικονομία, την Ευρώπη και τα διεθνή, με κείμενα που διασταυρώνονται πριν δημοσιευτούν. Οι πρώτες δημοσιεύσεις έρχονται σύντομα.</p>
+      <p class="launch-cta"><a class="btn" href="{{ "taftotita/" | relURL }}">Ποιοι είμαστε</a> <a class="btn btn-ghost" href="{{ "diorthoseis/" | relURL }}">Διορθώσεις</a> <a class="btn btn-ghost" href="{{ "index.xml" | relURL }}">RSS</a></p>
+    </div>
+    <ul class="principles" aria-label="Αρχές">
+      <li><span class="pn">01</span><h2>Διασταύρωση</h2><p>Κάθε είδηση ελέγχεται σε περισσότερες από μία ανεξάρτητες πηγές πριν δημοσιευτεί.</p></li>
+      <li><span class="pn">02</span><h2>Σαφή είδη κειμένων</h2><p>Είδηση, Ανάλυση, Επεξηγηματικό ή Άποψη — πάντα σημειωμένο στην κορυφή.</p></li>
+      <li><span class="pn">03</span><h2>Ουδετερότητα</h2><p>Ίδια μεταχείριση για όλους· οι δηλώσεις μεταφέρονται όπως ειπώθηκαν, χωρίς σχόλια.</p></li>
+      <li><span class="pn">04</span><h2>Χωρίς παρακολούθηση</h2><p>Χωρίς cookies, διαφημίσεις ή εργαλεία μέτρησης τρίτων.</p></li>
+    </ul>
+  </div>
+</section>
+<section class="wrap launch-secs" aria-labelledby="secs-h">
+  <h2 id="secs-h" class="sec-h"><span>Οι ενότητές μας</span></h2>
+  <ul class="sec-tiles">{{ range hugo.Data.categories }}<li style="--c:{{ .color }}"><a href="{{ printf "category/%s/" .key | relURL }}"><span class="st-name">{{ .name }}</span><span class="st-desc">{{ .desc }}</span></a></li>{{ end }}</ul>
+</section>

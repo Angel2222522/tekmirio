@@ -1,0 +1,6 @@
+{{- $out := slice -}}
+{{- range where site.RegularPages "Section" "articles" -}}
+{{- $c := partial "cat.html" .Params.category -}}
+{{- $out = $out | append (dict "t" .Title "u" .RelPermalink "s" (.Params.summary | default "") "c" $c.name "y" (partial "atype.html" .Params.article_type) "d" (partial "date.html" .Date) "x" (.Plain | truncate 600) "g" (delimit (.Params.tags | default slice) " ")) -}}
+{{- end -}}
+{{- $out | jsonify -}}

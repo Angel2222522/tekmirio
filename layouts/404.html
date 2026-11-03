@@ -1,0 +1,3 @@
+{{ define "main" }}<section class="wrap empty"><p class="eyebrow">Σφάλμα 404</p><h1>Η σελίδα δεν βρέθηκε</h1><p>Ο σύνδεσμος μπορεί να έχει αλλάξει ή το άρθρο να μην υπάρχει πια.</p>
+<form class="search-form" role="search" action="{{ "anazitisi/" | relURL }}"><label for="q404" class="vh">Αναζήτηση</label><input id="q404" name="q" type="search" placeholder="Αναζητήστε στο αρχείο…"></form>
+<p><a class="btn" href="{{ site.Home.RelPermalink }}">Στην αρχική</a> <a class="btn btn-ghost" href="{{ "articles/" | relURL }}">Στο αρχείο</a></p></section>{{ end }}

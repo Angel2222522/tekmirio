@@ -1,0 +1,12 @@
+{{- /* dict page, style (std|text|lead|hz|row), img (bool), dek (bool) */ -}}
+{{- $p := .page }}{{ $s := .style | default "std" -}}
+{{- $img := and (ne .img false) (ne $s "text") -}}
+<article class="card card-{{ $s }}">
+  {{ if $img }}<a class="card-img" href="{{ $p.RelPermalink }}" tabindex="-1" aria-hidden="true">{{ partial "cover.html" (dict "page" $p "size" (cond (eq $s "lead") "l" "m")) }}</a>{{ end }}
+  <div class="card-body">
+    {{ partial "kicker.html" $p }}
+    {{ if eq $s "lead" }}<h2 class="h-lead"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>{{ else }}<h3><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>{{ end }}
+    {{ if ne .dek false }}<p class="dek">{{ $p.Params.summary }}</p>{{ end }}
+    <p class="meta"><time datetime="{{ $p.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "reldate.html" $p.Date }}</time></p>
+  </div>
+</article>

@@ -1,0 +1,10 @@
+{{- $u := .Permalink | urlquery }}{{ $t := .Title | urlquery -}}
+<div class="share" role="group" aria-label="Κοινοποίηση">
+  <span class="share-l">Κοινοποίηση</span>
+  <a href="https://x.com/intent/post?url={{ $u }}&amp;text={{ $t }}" rel="noopener nofollow" target="_blank">X</a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u={{ $u }}" rel="noopener nofollow" target="_blank">Facebook</a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $u }}" rel="noopener nofollow" target="_blank">LinkedIn</a>
+  <a href="https://wa.me/?text={{ $t }}%20{{ $u }}" rel="noopener nofollow" target="_blank">WhatsApp</a>
+  <a href="mailto:?subject={{ $t }}&amp;body={{ $u }}">Email</a>
+  <button type="button" data-copy="{{ .Permalink }}">Αντιγραφή συνδέσμου</button>
+</div>

@@ -1,0 +1,34 @@
+{{ define "main" }}
+{{- if eq .Section "articles" }}{{ $c := partial "cat.html" .Params.category }}
+<article class="article" style="--c:{{ $c.color }}">
+  <header class="a-head wrap-narrow">
+    {{ if .Draft }}<p class="draft-flag">ΠΡΟΣΧΕΔΙΟ — δεν δημοσιεύεται</p>{{ end }}
+    {{ partial "kicker.html" . }}
+    <h1>{{ .Title }}</h1>
+    <p class="standfirst">{{ .Params.summary }}</p>
+    <div class="byline">
+      <span class="by">{{ site.Params.byline }}</span>
+      <span>Δημοσίευση: <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "date.html" .Date }}</time></span>
+      {{ if gt .Lastmod.Unix .Date.Unix }}<span>Ενημέρωση: <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ partial "date.html" .Lastmod }}</time></span>{{ end }}
+      <span>{{ .ReadingTime }} λεπτ{{ if eq .ReadingTime 1 }}ό{{ else }}ά{{ end }} ανάγνωσης</span>
+    </div>
+  </header>
+  <div class="a-cover wrap-wide">{{ partial "cover.html" (dict "page" . "size" "xl") }}</div>
+  <div class="a-body wrap-narrow">
+    <div class="prose">{{ .Content }}</div>
+    {{ partial "share.html" . }}
+    <aside class="disclosure" aria-label="Διορθώσεις"><p>Εντοπίσατε λάθος; <a href="{{ site.Params.correctionsURL }}{{ .Title | urlquery }}">Υποβάλετε διόρθωση</a>.</p></aside>
+    {{ with .Params.tags }}<p class="tags"><span class="vh">Ετικέτες:</span>{{ range . }}<a href="{{ (printf "tags/%s/" (. | urlize)) | relURL }}">{{ . }}</a>{{ end }}</p>{{ end }}
+  </div>
+</article>
+{{- $rel := where (where (where site.RegularPages "Section" "articles") "Params.category" .Params.category) "Permalink" "ne" .Permalink -}}
+{{- if lt (len $rel) 3 }}{{ $rel = $rel | append (where (where site.RegularPages "Section" "articles") "Permalink" "ne" .Permalink) | uniq }}{{ end -}}
+{{ with first 4 $rel }}<section class="wrap related" aria-labelledby="rel-h"><h2 id="rel-h" class="sec-h"><span>Διαβάστε επίσης</span></h2><div class="grid g4">{{ range $i, $p := . }}{{ partial "card.html" (dict "page" $p "style" (cond (lt $i 2) "std" "text")) }}{{ end }}</div></section>{{ end }}
+{{- else }}
+<article class="article page">
+  <header class="a-head wrap-narrow"><p class="kicker"><span class="k-cat">Τεκμήριο</span></p><h1>{{ .Title }}</h1></header>
+  <div class="a-body wrap-narrow"><div class="prose">{{ .Content }}</div>
+  <nav class="page-nav" aria-label="Σελίδες πληροφοριών"><a href="{{ "taftotita/" | relURL }}">Ποιοι είμαστε</a><a href="{{ "diorthoseis/" | relURL }}">Διορθώσεις</a><a href="{{ "aporrito/" | relURL }}">Απόρρητο</a><a href="{{ "oroi/" | relURL }}">Όροι</a></nav></div>
+</article>
+{{- end }}
+{{ end }}

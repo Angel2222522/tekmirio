@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="el">
+<head>{{ partial "head.html" . }}</head>
+<body class="{{ .Kind }}{{ with .Section }} s-{{ . }}{{ end }}">
+<a class="skip" href="#main">Μετάβαση στο περιεχόμενο</a>
+{{ partial "header.html" . }}
+<main id="main" tabindex="-1">{{ block "main" . }}{{ end }}</main>
+{{ partial "footer.html" . }}
+<script>{{ partial "site.js" . | safeJS }}</script>
+</body>
+</html>

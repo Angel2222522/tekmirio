@@ -1,0 +1,20 @@
+<footer class="site-foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <a class="brand brand-inv" href="{{ site.Home.RelPermalink }}"><span class="brand-mark" aria-hidden="true">Τ</span><span class="brand-name">{{ site.Title }}</span></a>
+      <p>{{ site.Params.description }}</p>
+    </div>
+    <nav aria-label="Ενότητες (υποσέλιδο)"><h2>Ενότητες</h2><ul>
+      {{ range hugo.Data.categories }}<li><a href="{{ printf "category/%s/" .key | relURL }}">{{ .name }}</a></li>{{ end }}
+    </ul></nav>
+    <nav aria-label="Πληροφορίες"><h2>Το μέσο</h2><ul>
+      <li><a href="{{ "taftotita/" | relURL }}">Ποιοι είμαστε</a></li>
+      <li><a href="{{ "diorthoseis/" | relURL }}">Πολιτική διορθώσεων</a></li>
+      <li><a href="{{ "aporrito/" | relURL }}">Απόρρητο</a></li>
+      <li><a href="{{ "oroi/" | relURL }}">Όροι χρήσης</a></li>
+      <li><a href="{{ "articles/" | relURL }}">Αρχείο</a></li>
+      <li><a href="{{ "index.xml" | relURL }}">RSS</a></li>
+    </ul></nav>
+  </div>
+  <div class="wrap foot-base"><span>© {{ now.Year }} {{ site.Title }}</span><span>Χωρίς cookies · Χωρίς διαφημίσεις · Χωρίς παρακολούθηση</span></div>
+</footer>

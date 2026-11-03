@@ -1,0 +1,20 @@
+{{- /* Εικόνα άρθρου: αν υπάρχει image → φωτογραφία/εικονογράφηση με credit, αλλιώς διακριτικό γεωμετρικό μοτίβο ενότητας. dict page, size */ -}}
+{{- $p := .page -}}{{ $c := partial "cat.html" $p.Params.category -}}
+{{- with $p.Params.image -}}
+<figure class="cover cover-{{ $.size | default "m" }} cover-img"><img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ $p.Params.image_alt | default "" }}" loading="lazy" decoding="async" width="1200" height="675">{{ with $p.Params.image_credit }}{{ if eq $.size "xl" }}<figcaption>{{ . }}</figcaption>{{ end }}{{ end }}</figure>
+{{- else -}}
+{{- $h := hash.FNV32a $p.Title -}}{{ $dx := sub (mod $h 90) 45 }}{{ $dy := sub (mod (div $h 97) 40) 20 }}{{ $sc := add 90 (mod (div $h 13) 25) -}}
+<div class="cover cover-{{ .size | default "m" }} cover-motif m-{{ $c.key }}" style="--c:{{ $c.color }}" aria-hidden="true">
+<svg viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice" focusable="false">
+<g fill="none" stroke="currentColor" stroke-width="1.1" transform="translate({{ add 200 $dx }} {{ add 118 $dy }}) scale({{ div (float $sc) (cond (eq .size "xl") 175.0 125.0) }})">
+{{- if eq $c.key "kyvernisi-vouli" }}{{ range seq 1 7 }}{{ $r := mul . 22 }}<path d="M{{ sub 0 $r }} 60 A{{ $r }} {{ $r }} 0 0 1 {{ $r }} 60" stroke-dasharray="2 {{ add 3 . }}" stroke-width="3" stroke-linecap="round"/>{{ end }}<path d="M-170 60 H170"/>
+{{- else if eq $c.key "politiki" }}<path d="M-150 -40 L0 -95 L150 -40 Z"/><path d="M-160 -30 H160 M-160 92 H160 M-170 102 H170"/>{{ range seq -4 4 }}<path d="M{{ mul . 34 }} -24 V86 M{{ add (mul . 34) 8 }} -24 V86"/>{{ end }}
+{{- else if eq $c.key "kommata-thesmoi" }}{{ range $i, $v := slice 70 120 45 95 30 60 }}<rect x="{{ sub (mul $i 46) 135 }}" y="{{ sub 90 $v }}" width="30" height="{{ $v }}"/>{{ end }}<path d="M-160 90 H160"/><circle cx="-110" cy="-70" r="18"/><path d="M-118 -70 l6 6 l12 -14"/>
+{{- else if eq $c.key "oikonomia" }}{{ range seq -3 3 }}<path d="M-180 {{ mul . 30 }} H180" stroke-opacity=".35"/>{{ end }}<path d="M-180 70 L-130 40 L-90 55 L-40 -5 L0 15 L50 -40 L90 -20 L140 -75 L180 -60" stroke-width="2.4"/><path d="M-180 85 L-120 70 L-60 78 L0 50 L60 58 L120 30 L180 38" stroke-dasharray="4 5"/>
+{{- else if eq $c.key "koinonia" }}{{ range $r := seq -3 3 }}{{ range $q := seq -6 6 }}{{ $d := add (mul $r $r) (div (mul $q $q) 4) }}<circle cx="{{ mul $q 26 }}" cy="{{ mul $r 26 }}" r="{{ cond (lt $d 4) 7 4 }}" {{ if lt $d 3 }}fill="currentColor" fill-opacity=".5"{{ end }}/>{{ end }}{{ end }}
+{{- else if eq $c.key "evropi" }}{{ range seq 0 11 }}{{ $a := mul . 30 }}<g transform="rotate({{ $a }}) translate(0 -78) rotate(-{{ $a }})"><path d="M0 -9 L2.6 -2.8 L9 -2.8 L3.9 1.1 L5.6 7.5 L0 3.7 L-5.6 7.5 L-3.9 1.1 L-9 -2.8 L-2.6 -2.8Z" fill="currentColor" fill-opacity=".55" stroke="none"/></g>{{ end }}<circle r="110" stroke-opacity=".35"/><circle r="140" stroke-opacity=".2"/>
+{{- else if eq $c.key "diethni" }}<circle r="95"/>{{ range seq 1 4 }}<ellipse rx="{{ mul . 22 }}" ry="95"/>{{ end }}{{ range seq -2 2 }}<path d="M{{ sub 0 (math.Sqrt (sub 9025 (mul (mul . 35) (mul . 35)))) }} {{ mul . 35 }} H{{ math.Sqrt (sub 9025 (mul (mul . 35) (mul . 35))) }}"/>{{ end }}<circle r="125" stroke-dasharray="1 6" stroke-width="2" stroke-linecap="round"/>
+{{- else }}{{ range seq -4 4 }}<path d="M-150 {{ mul . 20 }} H{{ sub 150 (mul (mod (add $h .) 5) 22) }}" stroke-width="3" stroke-linecap="round" stroke-opacity="{{ cond (eq . 0) "1" ".45" }}"/>{{ end }}<path d="M-170 -100 V100" stroke-width="2"/>
+{{- end }}
+</g></svg></div>
+{{- end -}}

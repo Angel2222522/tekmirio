@@ -1,0 +1,24 @@
+{{ define "main" }}
+{{- $c := dict "name" .Title "color" "" "desc" "" }}{{ if eq .Kind "term" }}{{ $x := partial "cat.html" .Data.Term }}{{ if ne $x.key $x.name }}{{ $c = $x }}{{ end }}{{ end -}}
+{{- $isArchive := and (eq .Kind "section") (eq .Section "articles") -}}
+<header class="list-head"{{ with $c.color }} style="--c:{{ . }}"{{ end }}><div class="wrap">
+  <p class="eyebrow">{{ if $isArchive }}Όλες οι δημοσιεύσεις{{ else if eq .Data.Plural "category" }}Ενότητα{{ else if eq .Data.Plural "tags" }}Ετικέτα{{ else if eq .Data.Plural "article_type" }}Είδος κειμένου{{ end }}</p>
+  <h1>{{ if eq .Data.Plural "article_type" }}{{ partial "atype.html" .Data.Term }}{{ else }}{{ $c.name }}{{ end }}</h1>
+  {{ with $c.desc }}<p class="list-desc">{{ . }}</p>{{ end }}
+  <p class="list-meta">{{ len .Pages }} {{ if eq (len .Pages) 1 }}δημοσίευση{{ else }}δημοσιεύσεις{{ end }}{{ with .OutputFormats.Get "rss" }} · <a href="{{ .RelPermalink }}">RSS</a>{{ end }}</p>
+</div></header>
+<div class="wrap list-body">
+{{- if not .Pages }}<p class="none">Δεν υπάρχουν ακόμη δημοσιεύσεις εδώ. <a href="{{ site.Home.RelPermalink }}">Επιστροφή στην αρχική</a>.</p>
+{{- else if $isArchive }}
+  <form class="archive-search" role="search" action="{{ "anazitisi/" | relURL }}"><label for="aq" class="vh">Αναζήτηση στο αρχείο</label><input id="aq" name="q" type="search" placeholder="Αναζήτηση στο αρχείο…"><button>Αναζήτηση</button></form>
+  {{ range .Pages.GroupByDate "2006-01" }}{{ $d := time.AsTime (printf "%s-01" .Key) }}
+  <section class="arch-month"><h2 class="sec-h">{{ index (slice "Ιανουάριος" "Φεβρουάριος" "Μάρτιος" "Απρίλιος" "Μάιος" "Ιούνιος" "Ιούλιος" "Αύγουστος" "Σεπτέμβριος" "Οκτώβριος" "Νοέμβριος" "Δεκέμβριος") (sub (int $d.Month) 1) }} {{ $d.Year }}</h2>
+  <ol class="arch-list">{{ range .Pages }}{{ $cc := partial "cat.html" .Params.category }}<li><time datetime="{{ .Date.Format "2006-01-02" }}">{{ (time.In "Europe/Athens" .Date).Format "02.01" }}</time><div><a class="arch-t" href="{{ .RelPermalink }}">{{ .Title }}</a><span class="arch-m"><span class="k-cat" style="--c:{{ $cc.color }}">{{ $cc.name }}</span> · {{ partial "atype.html" .Params.article_type }}</span></div></li>{{ end }}</ol></section>
+  {{ end }}
+{{- else }}
+  {{ $ps := .Pages }}
+  <div class="list-lead">{{ partial "card.html" (dict "page" (index $ps 0) "style" "lead") }}</div>
+  {{ with after 1 $ps }}<div class="grid g3">{{ range . }}{{ partial "card.html" (dict "page" .) }}{{ end }}</div>{{ end }}
+{{- end }}
+</div>
+{{ end }}

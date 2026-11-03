@@ -1,0 +1,3 @@
+{{- $r := dict "key" . "name" . "color" "#444" "glyph" "Τ" "desc" "" -}}
+{{- range hugo.Data.categories }}{{ if eq .key $ }}{{ $r = . }}{{ end }}{{ end -}}
+{{- return $r -}}

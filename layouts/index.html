@@ -1,0 +1,48 @@
+{{ define "main" }}
+{{- $all := where site.RegularPages "Section" "articles" -}}
+{{- if not $all }}{{ partial "empty-home.html" . }}{{ else }}
+{{- $lead := index $all 0 -}}
+{{- $sec := first 4 (after 1 $all) -}}
+{{- $used := slice $lead.Permalink }}{{ range $sec }}{{ $used = $used | append .Permalink }}{{ end -}}
+<h1 class="vh">{{ site.Title }} — {{ site.Params.tagline }}</h1>
+<section class="strip" aria-labelledby="strip-h"><div class="wrap strip-in">
+  <h2 id="strip-h" class="strip-h">Τελευταία</h2>
+  <ol>{{ range first 4 $all }}<li><time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ (time.In "Europe/Athens" .Date).Format "15:04" }}</time><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ol>
+</div></section>
+<section class="wrap top-story" aria-label="Κύρια θέματα">
+  <div class="ts-lead">{{ partial "card.html" (dict "page" $lead "style" "lead") }}</div>
+  <div class="ts-second">
+    {{ range $i, $p := $sec }}{{ partial "card.html" (dict "page" $p "style" (cond (eq $i 0) "std" "text")) }}{{ end }}
+  </div>
+  {{- $an := where (where $all "Params.article_type" "in" (slice "analysi" "epexigimatiko" "apopsi")) "Permalink" "not in" $used -}}
+  <aside class="ts-rail" aria-labelledby="rail-h">
+    <h2 id="rail-h" class="rail-title">Ανάλυση & Άποψη</h2>
+    <ol class="ranked">{{ range first 5 $an }}{{ $used = $used | append .Permalink }}<li>{{ partial "card.html" (dict "page" . "style" "text" "img" false "dek" false) }}</li>{{ end }}</ol>
+    <a class="more" href="{{ "category/analyseis/" | relURL }}">Όλες οι αναλύσεις →</a>
+  </aside>
+</section>
+{{- $rest := where $all "Permalink" "not in" $used -}}
+{{- with first 5 $rest }}
+<section class="wrap block" aria-labelledby="h-latest"><h2 id="h-latest" class="sec-h"><span>Πρόσφατα</span><a class="sec-more" href="{{ "articles/" | relURL }}">Αρχείο →</a></h2>
+<div class="mosaic">{{ range $i, $p := . }}{{ partial "card.html" (dict "page" $p "style" (cond (eq $i 0) "hz" (cond (lt $i 3) "std" "text"))) }}{{ end }}</div></section>
+{{- end }}
+{{- $band := where $all "Params.article_type" "in" (slice "analysi" "epexigimatiko") -}}
+{{- with first 4 $band }}
+<section class="band" aria-labelledby="h-an"><div class="wrap">
+<h2 id="h-an" class="sec-h sec-inv"><span>Για να καταλάβετε</span><span class="band-sub">Αναλύσεις και επεξηγηματικά κείμενα</span></h2>
+<ol class="band-grid">{{ range . }}<li>{{ partial "card.html" (dict "page" . "style" "text") }}</li>{{ end }}</ol></div></section>
+{{- end }}
+<div class="wrap sections">
+{{- range hugo.Data.categories }}{{ $k := .key }}{{ $ps := where $all "Params.category" $k }}
+{{- if $ps }}
+<section class="sec" aria-labelledby="s-{{ $k }}" style="--c:{{ .color }}">
+  <h2 id="s-{{ $k }}" class="sec-h"><a href="{{ printf "category/%s/" $k | relURL }}">{{ .name }}</a><a class="sec-more" href="{{ printf "category/%s/" $k | relURL }}" aria-label="Περισσότερα: {{ .name }}">Περισσότερα →</a></h2>
+  <div class="sec-body">
+    {{ partial "card.html" (dict "page" (index $ps 0) "style" "std") }}
+    {{ with after 1 (first 4 $ps) }}<ul class="sec-list">{{ range . }}<li>{{ partial "card.html" (dict "page" . "style" "text" "img" false "dek" false) }}</li>{{ end }}</ul>{{ end }}
+  </div>
+</section>
+{{- end }}{{ end }}
+</div>
+{{- end }}
+{{ end }}

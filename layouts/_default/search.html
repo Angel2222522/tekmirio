@@ -1,0 +1,8 @@
+{{ define "main" }}
+<header class="list-head"><div class="wrap"><p class="eyebrow">Αρχείο</p><h1>Αναζήτηση</h1>
+<form class="search-form" role="search" onsubmit="return false"><label for="q" class="vh">Όροι αναζήτησης</label>
+<input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="π.χ. προϋπολογισμός, ανεργία, Βουλή" autofocus></form>
+<p id="status" class="list-meta" aria-live="polite">Η αναζήτηση γίνεται στον υπολογιστή σας· δεν καταγράφεται.</p></div></header>
+<div class="wrap list-body"><ol id="results" class="results"></ol></div>
+<script src="{{ "js/search.js" | relURL }}" data-index="{{ "index.json" | relURL }}" defer></script>
+{{ end }}

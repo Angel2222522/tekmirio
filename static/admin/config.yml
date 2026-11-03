@@ -1,0 +1,117 @@
+# Ρυθμίσεις Sveltia CMS — https://sveltiacms.app/en/docs
+backend:
+  name: github
+  repo: Angel2222522/tekmirio
+  branch: main
+  auth_methods: [token]
+  commit_messages:
+    create: "Νέο άρθρο: {{slug}}"
+    update: "Ενημέρωση: {{slug}}"
+    delete: "Διαγραφή: {{slug}}"
+site_url: https://angel2222522.github.io/tekmirio/
+display_url: https://angel2222522.github.io/tekmirio/
+locale: el
+logo_url: /tekmirio/icon-512.png
+publish_mode: simple
+media_folder: static/uploads
+public_folder: /uploads
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+collections:
+  - name: articles
+    label: Άρθρα
+    label_singular: Άρθρο
+    description: "Κάθε άρθρο ελέγχεται πριν δημοσιευτεί. Αν υπάρχει λάθος, ο ιστότοπος δεν αλλάζει και το σφάλμα εμφανίζεται στο GitHub → Actions."
+    folder: content/articles
+    path: "{{year}}/{{fields.slug}}"
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{title}} — {{status}}"
+    sortable_fields: [date, title, category, status]
+    view_filters:
+      - {label: "Δημοσιευμένα", field: status, pattern: published}
+      - {label: "Προσχέδια", field: status, pattern: draft}
+    fields:
+      - {label: "Τίτλος", name: title, widget: string, hint: "Σύντομος, πραγματολογικός τίτλος."}
+      - {label: "Διεύθυνση (slug)", name: slug, widget: string, pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Μόνο λατινικά πεζά, αριθμοί και παύλες, π.χ. anergia-septemvrios-2026"]}
+      - {label: "Περίληψη", name: summary, widget: text, hint: "1–2 προτάσεις, έως 300 χαρακτήρες."}
+      - label: "Ενότητα"
+        name: category
+        widget: select
+        options:
+          - {label: "Πολιτική", value: politiki}
+          - {label: "Κυβέρνηση & Βουλή", value: kyvernisi-vouli}
+          - {label: "Κόμματα & Θεσμοί", value: kommata-thesmoi}
+          - {label: "Οικονομία", value: oikonomia}
+          - {label: "Κοινωνία", value: koinonia}
+          - {label: "Ευρώπη", value: evropi}
+          - {label: "Διεθνή & Γεωπολιτική", value: diethni}
+          - {label: "Αναλύσεις", value: analyseis}
+      - label: "Είδος κειμένου"
+        name: article_type
+        widget: select
+        default: eidisi
+        options:
+          - {label: "Είδηση", value: eidisi}
+          - {label: "Ανάλυση", value: analysi}
+          - {label: "Επεξηγηματικό", value: epexigimatiko}
+          - {label: "Άποψη", value: apopsi}
+      - {label: "Δημοσίευση", name: date, widget: datetime, format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}"}
+      - {label: "Τελευταία ενημέρωση", name: lastmod, widget: datetime, format: "YYYY-MM-DDTHH:mm:ssZ", default: "{{now}}"}
+      - label: "Κατάσταση"
+        name: status
+        widget: select
+        default: draft
+        options:
+          - {label: "Προσχέδιο (δεν εμφανίζεται)", value: draft}
+          - {label: "Δημοσιευμένο", value: published}
+      - label: "Επίπεδο κινδύνου"
+        name: risk
+        widget: select
+        default: low
+        hint: "«Υψηλός» = καταγγελίες, προσωπικά δεδομένα, νομικός κίνδυνος. Τέτοια άρθρα δεν δημοσιεύονται."
+        options:
+          - {label: "Χαμηλός", value: low}
+          - {label: "Μέτριος", value: medium}
+          - {label: "Υψηλός", value: high}
+      - {label: "Προσχέδιο (τεχνικό)", name: draft, widget: boolean, default: true, required: false, hint: "Ορίζεται από την «Κατάσταση» κατά τη δημοσίευση."}
+      - {label: "Εικόνα (προαιρετική)", name: image, widget: image, required: false, hint: "Μόνο δικές μας εικονογραφήσεις ή εικόνες δημόσιου τομέα / ελεύθερης άδειας (CC). Χωρίς φωτογραφίες ειδησεογραφικών πρακτορείων."}
+      - {label: "Περιγραφή εικόνας (alt)", name: image_alt, widget: string, required: false, hint: "Τι δείχνει η εικόνα, για αναγνώστες οθόνης. Υποχρεωτικό αν υπάρχει εικόνα."}
+      - {label: "Πίστωση / άδεια εικόνας", name: image_credit, widget: string, required: false, hint: "π.χ. «Wikimedia Commons, Δημιουργός, CC BY-SA 4.0». Υποχρεωτικό αν υπάρχει εικόνα."}
+      - {label: "Ετικέτες", name: tags, widget: list, required: false}
+      - {label: "Κείμενο", name: body, widget: markdown, hint: "Για επισημασμένο απόσπασμα: γραμμή που ξεκινά με > (παράθεση)."}
+  - name: pages
+    label: Σελίδες
+    files:
+      - label: "Ποιοι είμαστε"
+        name: about
+        file: content/pages/about.md
+        fields:
+          - {label: "Τίτλος", name: title, widget: string}
+          - {label: "Διεύθυνση", name: url, widget: hidden}
+          - {label: "Κείμενο", name: body, widget: markdown}
+      - label: "Πολιτική διορθώσεων"
+        name: corrections
+        file: content/pages/corrections.md
+        fields:
+          - {label: "Τίτλος", name: title, widget: string}
+          - {label: "Διεύθυνση", name: url, widget: hidden}
+          - {label: "Κείμενο", name: body, widget: markdown}
+      - label: "Απόρρητο"
+        name: privacy
+        file: content/pages/privacy.md
+        fields:
+          - {label: "Τίτλος", name: title, widget: string}
+          - {label: "Διεύθυνση", name: url, widget: hidden}
+          - {label: "Κείμενο", name: body, widget: markdown}
+      - label: "Όροι χρήσης"
+        name: terms
+        file: content/pages/terms.md
+        fields:
+          - {label: "Τίτλος", name: title, widget: string}
+          - {label: "Διεύθυνση", name: url, widget: hidden}
+          - {label: "Κείμενο", name: body, widget: markdown}

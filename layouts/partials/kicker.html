@@ -1,0 +1,2 @@
+{{- $c := partial "cat.html" .Params.category -}}
+<p class="kicker"><a class="k-cat" href="{{ printf "category/%s/" $c.key | relURL }}" style="--c:{{ $c.color }}">{{ $c.name }}</a><span class="k-type t-{{ .Params.article_type }}">{{ partial "atype.html" .Params.article_type }}</span></p>

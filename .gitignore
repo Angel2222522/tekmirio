@@ -1,0 +1,9 @@
+public/
+resources/_gen/
+.hugo_build.lock
+.env
+*.pem
+*.key
+logs/*.local.*
+content/articles/*/demo-*.md
+static/uploads/demo-*

@@ -1,0 +1,3 @@
+{{- $s := upper . -}}
+{{- range slice (slice "Ά" "Α") (slice "Έ" "Ε") (slice "Ή" "Η") (slice "Ί" "Ι") (slice "Ό" "Ο") (slice "Ύ" "Υ") (slice "Ώ" "Ω") (slice "ΐ" "Ϊ") (slice "ΰ" "Ϋ") }}{{ $s = replace $s (index . 0) (index . 1) }}{{ end -}}
+{{- return $s -}}
